@@ -613,9 +613,113 @@
             <h3>穿梭框</h3>
             <div class="displayBlock">
                 <el-transfer v-model="value" :data="data">
-
+                    <!-- 已经 自己进行封装(纯原生封装) -->
                 </el-transfer>
             </div>
+           <h3>form表单</h3>
+           <div class="displayBlock">
+               <span>行内表单</span>
+               <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                   <el-form-item label="审批人">
+                       <el-input v-model="formInline.user" placeholder="审批人" ></el-input>
+                   </el-form-item>
+                   <el-form-item label="活动区域">
+                       <el-select v-model="formInline.region" placeholder="活动区域">
+                           <el-option label="区域1" value="shanghai"></el-option>
+                           <el-option label="区域2" value="beijing"></el-option>
+                       </el-select>
+                   </el-form-item>
+                   <el-form-item>
+                       <el-button type="primary" >提交</el-button>
+                   </el-form-item>
+               </el-form>
+               <span>对齐方式</span>
+               <!-- label-position -->
+               <el-radio-group v-model="labelPosition" size="small" >
+                   <el-radio-button label="left">左对齐</el-radio-button>
+                   <el-radio-button label="right">右对齐</el-radio-button>
+                   <el-radio-button label="top">顶部对齐</el-radio-button>
+               </el-radio-group>
+               <!-- label-position -->
+               <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+                   <el-form-item label="名称">
+                       <el-input v-model="formLabelAlign.name"></el-input>
+                   </el-form-item>
+                   <el-form-item label="活动区域">
+                       <el-input v-model="formLabelAlign.region"></el-input>
+                   </el-form-item>
+                   <el-form-item label="活动形式">
+                       <el-input v-model="formLabelAlign.type"></el-input>
+                   </el-form-item>
+               </el-form>
+               <span>表单验证</span>
+               <div class="displayBlock">
+                   <!-- ref="ruleForm" 的设置 -->
+                   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                       <!-- rules : type: 'date', required: true, message: '请选择日期', trigger: 'change' -->
+                        <el-form-item label="活动名称" prop="name">
+                            <el-input v-model="ruleForm.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="活动区域" prop="region">
+                            <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+                                <el-option label="区域1" value="shanghai"></el-option>
+                                <el-option label="区域2" value="beijing"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="活动时间" required>
+                            <el-col :span="11">
+                                <el-form-item prop="date1">
+                                    <el-date-picker type="date" placeholder="请选择日期" v-model="ruleForm.date1" style="width:100%"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                            <el-col  class="line" :span="2" >-</el-col>
+                            <el-col :span="11" >
+                                <el-form-item prop="date2" >
+                                    <el-time-picker placeholder="选择时间" v-model="ruleForm.date2" style="width:100%" > </el-time-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-form-item>
+                        <el-form-item label="活动性质" prop="type">
+                            <el-checkbox-group v-model="ruleForm.type">
+                                <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
+                                <el-checkbox label="地推活动" name="type"></el-checkbox>
+                                <el-checkbox label="线下主题活动" name="type"></el-checkbox>
+                                <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="特殊资源" prop="resource">
+                            <el-radio-group v-model="ruleForm.resource">
+                                <el-radio label="线上品牌赞助"></el-radio>
+                                <el-radio label="线上场地免费"></el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm')" >立即创建</el-button>
+                            <el-button @click="resetForm('ruleForm')">重置</el-button>
+                        </el-form-item>
+                   </el-form>
+                   <!-- 自定义校验规则 -->
+                   <span>自定义校验规则</span>
+                   <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="密码" prop="pass">
+                            <el-input type="password" v-model="ruleForm2.pass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="checkPass">
+                            <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="年龄" prop="age">
+                            <el-input v-model.number="ruleForm2.age"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+                            <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <!-- 动态增减表单项 -->
+                    <span>动态增减表单项</span>
+                    
+               </div>
+           </div>
     </div>
 </template>
 <script>
@@ -634,9 +738,106 @@ export default {
            }
             return data
        }
+       const checkAge = (rule,value,callback)=>{
+           if(!value){
+               return callback(new Error('年龄不能为空'))
+           }
+           if(!Number.isInteger(value)){
+               calllback(new Error('请输入数字值'))
+           }else{
+               if(value < 18){
+                   callback('必须年满18岁')
+               }else{
+                   callback()
+               }
+           }
+       }
+    //    自定义校验 callback 必须被调用。
+       const valiPass = (rule,value,callback)=>{
+           if(value === ''){
+               callback(new Error('请输入密码'))
+           }else{
+               if(this.ruleForm2.checkPass !== ''){
+                   this.$refs.ruleForm2.validateField('checkPass')
+               }
+               callback()
+           }
+       }
+       const valiPass2 = (rule,value,callback)=>{
+           if(value === ''){
+               callback(new Error('请再次输入密码'))
+           }else if(value !== this.ruleForm2.pass){
+               callback(new Error('两次输入的密码不一致'))
+           }else {
+               callback()
+           }
+       }
        return {
+           formInline:{
+               user:'',
+               region:''
+           },
+           formLabelAlign:{
+               name:'',
+               region:'',
+               type:''
+           },
+           ruleForm:{
+               name:'',
+               region:'',
+               date1:'',
+               date2:'',
+               deliver:false,
+               type:[],
+               resource:[],
+               desc:''
+           },
+        //    验证规则
+            rules:{
+               name:[
+                   {required:true,message:'请输入活动名称',trigger:'blur'},
+                   {min:3,max:5,message:'长度3到5个字符',trigger:'blur'}
+               ],
+               region:[
+                   {reuire:true,message:'请选择活动区域',trigger:'change'},
+               ],
+               date1: [
+                    { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                ],
+                date2: [
+                    { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+                ],
+                type: [
+                    { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+                ],
+                resource: [
+                    { required: true, message: '请选择活动资源', trigger: 'change' }
+                ],
+                desc: [
+                    { required: true, message: '请填写活动形式', trigger: 'blur' }
+                ]
+            },
+            rules2:{
+                // 自定义校验规则
+                pass:[
+                    {validator:valiPass,trigger:'blur'},
+                ],
+                checkPass:[
+                    {validator:valiPass2,trigger:'blur'},
+                ],
+                age:[
+                    {validator:checkAge,trigger:'blur'}
+                ]
+            },
+            ruleForm2:{
+                pass: '',
+                checkPass: '',
+                age: ''
+            },
+           labelPosition:'left',
            data:generateData(),
            value:[1,4],
+           color:'#757348',
            colorAa:'409EFF',
            predefineColors:['#676897','#675533','#235757'],
            color1:'',
@@ -784,6 +985,20 @@ export default {
        console.log(this.value3)
    },
    methods:{
+       submitForm(name){
+           this.$refs[name].validate((valid)=>{
+               if(valid){
+                   alert('submit')
+               }else{
+                   alert('error submit')
+                   return false
+               }
+           })
+       },
+       resetForm(name){
+           console.log(this.$refs[name])
+           this.$refs[name].resetFields()
+       },
        showRATE(e){
            //打印出来的值即是评分
            console.log(e)
