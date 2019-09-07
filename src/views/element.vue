@@ -717,7 +717,61 @@
                     </el-form>
                     <!-- 动态增减表单项 -->
                     <span>动态增减表单项</span>
-                    
+                    <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="100px" class="demo-dynamic">
+                        <el-form-item
+                            prop="email"
+                            label="邮箱"
+                            :rules="[
+                            {required:true,message:'请输入邮箱地址',trigger:'blur'},
+                            {type:'email',message:'请输入正确的邮箱地址',trigger:['blur','change']}
+                            ]"
+                        >
+                            <el-input v-model="dynamicValidateForm.email"></el-input>
+                        </el-form-item>
+                        <el-form-item
+                            v-for="(domain,index) in dynamicValidateForm.domains"
+                            :label="'域名' + index"
+                            :key="index"
+                            :prop="'domains.' + index + '.value'"
+                            :rules="{
+                                required:true,message:'域名不能为空',trigger:'blur'
+                            }"
+                        >
+                        <!-- please transfer a valid prop path to form item!" -->
+                            <el-input v-model="domain.value"></el-input>
+                            <el-button @click.prevent="removeDomain(domain)">删除</el-button>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>
+                            <el-button @click="addDomain">新增域名</el-button>
+                            <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <span>数字类型的验证</span>
+                    <el-form :model="numberValidateForm" ref="numberValidateForm" label-width="100px" class="demo-ruleForm">
+                        <el-form-item
+                            label="年龄"
+                            prop="age"
+                            :rules="[
+                            { required: true, message: '年龄不能为空'},
+                            { type: 'number', message: '年龄必须为数字值'}
+                            ]"
+                        >
+                            <el-input type="age" v-model.number="numberValidateForm.age" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('numberValidateForm')">提交</el-button>
+                            <el-button @click="resetForm('numberValidateForm')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <!-- 嵌套在 el-form-item 中的 el-form-item 标签宽度默认为零，不会继承 el-form 的 label-width。如果需要可以为其单独设置 label-width 属性。 -->
+                    <span>表单的可继承的属性 size</span>
+                    <!-- 如果希望某个表单项或某个表单组件的尺寸不同于 Form 上的size属性，直接为这个表单项或表单组件设置自己的size即可。 -->
+                    <el-form :model="sizeValidateForm" ref="sizeValidateFrom" size="mini">
+                        <el-form-item prop="年龄">
+                            
+                        </el-form-item>
+                    </el-form>
                </div>
            </div>
     </div>
@@ -773,6 +827,15 @@ export default {
            }
        }
        return {
+           numberValidateForm:{
+               age:1
+           },
+           dynamicValidateForm:{
+               domains:{
+                   value:''
+               },
+               email:'',
+           },
            formInline:{
                user:'',
                region:''
@@ -985,6 +1048,18 @@ export default {
        console.log(this.value3)
    },
    methods:{
+       removeDomain(){
+           var index = this.dynamicValidateForm.domains.indexOf(item)
+           if(index !== -1){
+               this.dynamicValidateForm.domains.splice(index,1)
+           }
+       },
+       addDomain(){
+           this.dynamicValidateForm.domains.push({
+               value:'',
+               key:Date.now()
+            })
+       },
        submitForm(name){
            this.$refs[name].validate((valid)=>{
                if(valid){

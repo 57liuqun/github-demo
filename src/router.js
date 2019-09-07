@@ -28,6 +28,10 @@ export default new Router({
       path:'/miniateTrabsfer',
       name:'miniateTrabsfer',
       component:()=>import(/** webpackChunkName:'miniateTrabsfer'*/ './views/miniateTrabsfer.vue')
+    },{
+      path:'/optionSetting',
+      name:'optionSetting',
+      component:()=>import(/**webpackChunkName:'optionSetting' */ './views/optionSetting.vue')
     }
   ]
 })
