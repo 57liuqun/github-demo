@@ -293,7 +293,7 @@
 </template>
 <script>
     export default {
-        data () {
+        data :function(){
             return {
                 //基础数据
                 wldwflgl:true,//往来单位

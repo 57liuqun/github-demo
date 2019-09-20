@@ -779,7 +779,7 @@
 <script>
 let id = 0
 export default {
-   data () {
+   data:function(){
     //    下划线与 () 的区别
        const generateData = _ =>{
            const data = []

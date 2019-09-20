@@ -38,7 +38,7 @@
 </template>
 <script>
 export default {
-    data () {
+    data:function(){
         const leftList = [
                 {label:'one',id:'1',checked:false},
                 {label:'two',id:'2',checked:false},
@@ -79,6 +79,12 @@ export default {
        this.rightListSave = JSON.parse(JSON.stringify(this.rightList))
     },
     methods:{
+        //简单对象list自定义排序
+        /**  objList.sort((a,b)=>{
+            return a.id - b.id
+        })
+        */
+
         // 搜索
         searchLeftList(){
             let arr = []
@@ -91,10 +97,15 @@ export default {
                         arr.push(this.leftList[i])
                     }
                 }
-                this.leftList = arr
+                //按照id从小到大排序
+                this.leftList = arr.sort((a,b)=>{
+                    return a.id - b.id
+                })
             }else{
                 console.log(this.leftListSave)
-                this.leftList = JSON.parse(JSON.stringify(this.leftListSave))
+                this.leftList = JSON.parse(JSON.stringify(this.leftListSave)).sort((a,b)=>{
+                    return a.id - b.id
+                })
             }
         },
         searchRightList(){
@@ -106,9 +117,13 @@ export default {
                         arr.push(this.rightList[i])
                     }
                 }
-                this.rightList = arr
+                this.rightList = arr.sort((a,b)=>{
+                    return a.id - b.id
+                })
             }else{
-                this.rightList = JSON.parse(JSON.stringify(this.rightListSave))
+                this.rightList = JSON.parse(JSON.stringify(this.rightListSave)).sort((a,b)=>{
+                    return a.id - b.id
+                })
             }
         },
         rightToLeft(){
@@ -118,8 +133,12 @@ export default {
             for(let j = 0;j<this.rightListChecked.length;j++){
                 this.rightListChecked[j].checked = false
             }
-            this.leftList = this.leftList.concat(JSON.parse(JSON.stringify(this.rightListChecked)))
-            this.leftListSave = JSON.parse(JSON.stringify(this.leftList))
+            this.leftList = this.leftList.concat(JSON.parse(JSON.stringify(this.rightListChecked))).sort((a,b)=>{
+                return a.id - b.id
+            })
+            this.leftListSave = JSON.parse(JSON.stringify(this.leftList)).sort((a,b)=>{
+                return a.id - b.id
+            })
             console.log("保存数组00")
             console.log(this.leftListSave)
             // 将未选中重新赋值
@@ -141,15 +160,15 @@ export default {
                 this.rightListChecked[i].checked = false
             }
             this.rightChecked = []
-            //
-            console.log('右边向左边转移数据之后,左边数据的情况')
-            console.log(this.leftList)
-            console.log(this.leftListChecked)
-            console.log(this.leftListUnchecked)
-            console.log('右边自身的数据')
-            console.log(this.rightList)
-            console.log(this.rightListChecked)
-            console.log(this.rightListUnchecked)
+            // //
+            // console.log('右边向左边转移数据之后,左边数据的情况')
+            // console.log(this.leftList)
+            // console.log(this.leftListChecked)
+            // console.log(this.leftListUnchecked)
+            // console.log('右边自身的数据')
+            // console.log(this.rightList)
+            // console.log(this.rightListChecked)
+            // console.log(this.rightListUnchecked)
         },
         leftToRight(){
             this.leftList = JSON.parse(JSON.stringify(this.leftListUnchecked))
@@ -158,8 +177,12 @@ export default {
             for(let j = 0;j<this.leftListChecked.length;j++){
                 this.leftListChecked[j].checked = false
             }
-            this.rightList = this.rightList.concat(JSON.parse(JSON.stringify(this.leftListChecked)))
-            this.rightListSave = JSON.parse(JSON.stringify(this.rightList))
+            this.rightList = this.rightList.concat(JSON.parse(JSON.stringify(this.leftListChecked))).sort((a,b)=>{
+                return a.id - b.id
+            })
+            this.rightListSave = JSON.parse(JSON.stringify(this.rightList)).sort((a,b)=>{
+                return a.id - b.id
+            })
             // 将未选中重新赋值
             this.rightListUnchecked = (()=>{
                 // JSON.parse(JSON.stringify(this.rightList))
@@ -179,14 +202,14 @@ export default {
             for(let i = 0;i<this.leftListChecked.length;i++){
                 this.leftListChecked[i].checked = false
             }
-            console.log("左向右转移数据之后右边的数据情况")
-            console.log(this.rightList)
-            console.log(this.rightListChecked)
-            console.log(this.rightListUnchecked)
-            console.log('左边自身的数据')
-            console.log(this.leftList)
-            console.log(this.leftListChecked)
-            console.log(this.leftListUnchecked)
+            // console.log("左向右转移数据之后右边的数据情况")
+            // console.log(this.rightList)
+            // console.log(this.rightListChecked)
+            // console.log(this.rightListUnchecked)
+            // console.log('左边自身的数据')
+            // console.log(this.leftList)
+            // console.log(this.leftListChecked)
+            // console.log(this.leftListUnchecked)
         },
         selectLeftAll(){
             if(this.leftChooseAll){

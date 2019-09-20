@@ -32,6 +32,16 @@ export default new Router({
       path:'/optionSetting',
       name:'optionSetting',
       component:()=>import(/**webpackChunkName:'optionSetting' */ './views/optionSetting.vue')
+    },
+    {
+      path:'/erpTable',
+      name:'erpTable',
+      component:()=>import(/**webpackChunkName:'erpTable' */ './views/erpTable.vue')
+    },
+    {
+      path:'/editCell',
+      name:'editCell',
+      component:()=>import(/**webpackChunkName:'editCell' */ './views/editCell.vue')
     }
   ]
 })
